@@ -1,6 +1,6 @@
 # Step 1: Create a Dockerfile
 # Step 2: Set the base image
-FROM node:14
+FROM node:18
 
 # Step 3: Set the working directory
 WORKDIR /app
