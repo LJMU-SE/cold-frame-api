@@ -77,6 +77,11 @@ apiRouter.post("/push-latest", async (req, res) => {
 
     Logger.debug(`Adding Data to MongoDB: \n${JSON.stringify(body, null, 4)}`);
 
+    // If the body does not match the schema, throw an error
+    if (!body.temperature || !body.humidity || !body.moisture || !body.environmentState || !body.soilState || !body.mode) {
+        return res.status(400).json({ message: "Invalid body" });
+    }
+
     // Add to mongodb
     try {
         // Get the connection URI for the database
