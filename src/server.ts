@@ -15,8 +15,8 @@ app.use(morganMiddleware);
 import bodyParser from "body-parser";
 app.use(bodyParser.json());
 
-import appRoute from "./routes/router";
-app.use("/", appRoute);
+import appRouter from "./routes/router";
+app.use("/", appRouter);
 
 // Start the app
 const PORT = parseInt(process.env.PORT as string, 10) || 3000;

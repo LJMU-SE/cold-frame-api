@@ -23,7 +23,7 @@ interface DataBody {
 /**
  * API Route to fetch data from the database within the last 24 hours.
  */
-apiRouter.get("/fetch-latest/", async (req, res) => {
+apiRouter.get("/fetch-latest", async (req, res) => {
     try {
         // Get the connection URI for the database
         const uri = process.env.MONGO_URI as string;
@@ -71,7 +71,7 @@ apiRouter.get("/fetch-latest/", async (req, res) => {
 /**
  * API Route to push data to the database.
  */
-apiRouter.post("/push-latest/", async (req, res) => {
+apiRouter.post("/push-latest", async (req, res) => {
     // Get the body
     const body = req.body as DataBody;
 
