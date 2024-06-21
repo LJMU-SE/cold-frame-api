@@ -1,10 +1,25 @@
+// Import environment variables
+import dotenv from "dotenv";
+dotenv.config();
+
+// Import the logger
+import Logger from "./lib/logger";
+
+// Set up the express app
 import express from "express";
-
 const app = express();
-const PORT = 3000;
 
-app.get("/", (req, res) => res.send("Hello World!"));
+import morganMiddleware from "./config/morgan.config";
+app.use(morganMiddleware);
 
+import bodyParser from "body-parser";
+app.use(bodyParser.json());
+
+import appRouter from "./routes/router";
+app.use("/", appRouter);
+
+// Start the app
+const PORT = parseInt(process.env.PORT as string, 10) || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
+    Logger.info(`Server is running at http://localhost:${PORT}`);
 });
