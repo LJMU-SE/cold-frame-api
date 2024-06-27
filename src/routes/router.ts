@@ -20,17 +20,21 @@ interface DataBody {
     mode: string;
 }
 
+const connectToMongo = async () => {
+    // Get the connection URI for the database
+    const uri = process.env.MONGO_URI as string;
+    if (!uri) throw new Error("Database URI is not provided");
+
+    await mongoose.connect(process.env.MONGO_URI as string);
+    return mongoose;
+};
+
 /**
  * API Route to fetch data from the database within the last 24 hours.
  */
 apiRouter.get("/fetch-latest", async (req, res) => {
     try {
-        // Get the connection URI for the database
-        const uri = process.env.MONGO_URI as string;
-        if (!uri) throw new Error("Database URI is not provided");
-
-        // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
-        await mongoose.connect(uri);
+        await connectToMongo();
 
         // Fetch the data within the last 24 hours
         const data = await Reading.find({ timestamp: { $gte: new Date().getDate() - 1 } }).sort({ timestamp: -1 });
@@ -62,9 +66,7 @@ apiRouter.get("/fetch-latest", async (req, res) => {
     } catch (error) {
         Logger.error(error);
         res.status(500).json({ message: "Failed to fetch data", error });
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await mongoose.disconnect();
+        await mongoose.connection.close();
     }
 });
 
@@ -84,12 +86,7 @@ apiRouter.post("/push-latest", async (req, res) => {
 
     // Add to mongodb
     try {
-        // Get the connection URI for the database
-        const uri = process.env.MONGO_URI as string;
-        if (!uri) throw new Error("Database URI is not provided");
-
-        // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
-        await mongoose.connect(uri);
+        await connectToMongo();
 
         // Add the body to the database
         const data = new Reading(body);
@@ -100,7 +97,7 @@ apiRouter.post("/push-latest", async (req, res) => {
         Logger.error(error);
         res.status(500).json({ message: "Failed to add data", error });
     } finally {
-        await mongoose.disconnect();
+        await mongoose.connection.close();
     }
 });
 
