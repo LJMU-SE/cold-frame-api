@@ -101,6 +101,24 @@ apiRouter.post("/push-latest", async (req, res) => {
     }
 });
 
+/**
+ * API Route to clear all data from the database.
+ */
+apiRouter.get("/clear-all", async (req, res) => {
+    try {
+        await connectToMongo();
+
+        await Reading.deleteMany({});
+
+        res.status(200).json({ message: "All data cleared" });
+    } catch (error) {
+        Logger.error(error);
+        res.status(500).json({ message: "Failed to clear data", error });
+    } finally {
+        await mongoose.connection.close();
+    }
+});
+
 // Route to check the health of the API
 apiRouter.get("/", (req, res) => res.status(200).json({ message: "Hello World!" }));
 
