@@ -3,6 +3,7 @@ name: Build and Push to ACR
 on:
     push:
         branches: ["staging"]
+    workflow_dispatch:
 
 jobs:
     publish-staging-image:
