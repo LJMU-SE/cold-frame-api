@@ -3,6 +3,7 @@ name: Build and Push to ACR
 on:
     push:
         branches: ["production"]
+    workflow_dispatch:
 
 jobs:
     publish-production-image:
